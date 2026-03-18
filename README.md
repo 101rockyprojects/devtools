@@ -80,7 +80,6 @@ It creates:
 - schema `api`
 - table `api.devtools` (UUID primary key, category constraint, basic URL constraint)
 - RLS policies (public read, service-role manage)
-- seed data (migrated from `static/tools.json`)
 
 ### 2) Expose the `api` schema in Supabase
 
