@@ -1,0 +1,96 @@
+/* =====================================================
+   DevTools Directory — Global Design System
+   Color palette: Burgundy + Purple + Teal CTA
+   ===================================================== */
+
+:root {
+	/* — Primitives — */
+	--color-primary: #00a8b5;
+	--color-primary-dark: #00717c;
+	--color-primary-light: #20d9e8;
+	--color-secondary: #2a2f5e;
+	--color-secondary-dark: #151b3d;
+	--color-secondary-light: #395591;
+	--color-accent: #1458be;
+	--color-accent-rgb: 31, 98, 199;
+
+	/* — Dark surface palette — */
+	--bg: #10101a;
+	--bg-alt: #13131a;
+	--card-bg: #1c1c36;
+	--modal-bg: #1c1c25;
+	--input-bg: #111118;
+	--card-border: rgba(255, 255, 255, 0.08);
+
+	/* — Typography — */
+	--color-text: #f0eef6;
+	--color-text-muted: #7b7899;
+
+	/* — Spacing & radius — */
+	--radius-card: 16px;
+	--radius-btn: 50px;
+
+	/* — Transitions — */
+	--transition-fast: 0.18s ease;
+	--transition-med: 0.3s ease;
+}
+
+/* === Reset & Base === */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: 'Inter', system-ui, sans-serif;
+	background-color: var(--bg);
+	color: var(--color-text);
+	min-height: 100dvh;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--card-border);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-text-muted);
+}
+
+/* === Focus visible === */
+:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+/* === Utility: visually hidden === */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
