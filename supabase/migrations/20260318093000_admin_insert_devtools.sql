@@ -7,5 +7,5 @@ create policy "Admin insert devtools"
 on api.devtools
 for insert
 to authenticated
-with check ((auth.jwt() ->> 'email') = 'rockystevendeveloper@gmail.com');
+with check ((auth.jwt() ->> 'email') = 'example@gmail.com');
 

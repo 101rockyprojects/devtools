@@ -105,12 +105,7 @@ ADMIN_PASSWORD="<your-admin-password>"
 
 # Web3Forms (suggestion emails; used server-side)
 WEB3FORMS_API_KEY="<web3forms-api-key>"
-
-# Optional (defaults to rockystevendeveloper@gmail.com)
-SUGGESTIONS_TO_EMAIL="rockystevendeveloper@gmail.com"
-
-# Optional (JWT note)
-# SUPABASE_JWT_SECRET="<project jwt secret>"
+SUGGESTIONS_TO_EMAIL="example@gmail.com"
 ```
 
 JWT note: Supabase access tokens are JWTs. If you later add admin-only endpoints, you can verify Supabase JWTs server-side (e.g., to restrict catalog writes to your admin user). This project currently relies on RLS to prevent public writes.
