@@ -40,20 +40,20 @@
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#00a8b5" />
 
-    <link rel="canonical" href="https://101rockyprojects.github.io/devtools" />
-    <link rel="icon" type="image/webp" href="https://101rockyprojects.github.io/devtools/icon.webp" />
+    <link rel="canonical" href="https://devtools-directory.netlify.app/devtools" />
+    <link rel="icon" type="image/webp" href="https://devtools-directory.netlify.app/devtools/icon.webp" />
 
     <meta property="og:title" content="DevTools Directory" />
     <meta property="og:description" content="Herramientas web e IA para desarrolladores" />
-    <meta property="og:url" content="https://101rockyprojects.github.io/devtools" />
-    <meta property="og:image" content="https://101rockyprojects.github.io/devtools/og-image.webp" />
+    <meta property="og:url" content="https://devtools-directory.netlify.app/devtools" />
+    <meta property="og:image" content="https://devtools-directory.netlify.app/devtools/og-image.webp" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DevTools Directory" />
     <meta property="og:locale" content="es_ES" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="DevTools Directory" />
     <meta name="twitter:description" content="Herramientas web e IA para desarrolladores" />
-    <meta name="twitter:image" content="https://101rockyprojects.github.io/devtools/og-image.webp" />
+    <meta name="twitter:image" content="https://devtools-directory.netlify.app/devtools/og-image.webp" />
 
     <script type="application/ld+json">
       {
@@ -61,7 +61,7 @@
         "@type": "Person",
         "name": "Rocky Barrios",
         "jobTitle": "Backend Developer",
-        "url": "https://101rockyprojects.github.io/portafolio/",
+        "url": "https://devtools-directory.netlify.app/portafolio/",
         "sameAs": [
           "https://www.linkedin.com/in/rockydev101/",
           "https://github.com/101rockyprojects"
@@ -164,7 +164,7 @@
     <footer class="page-footer">
         <p>
             Hecho con ❤️ por
-            <a href="https://101rockyprojects.github.io/portafolio/" target="_blank" rel="noopener"
+            <a href="https://devtools-directory.netlify.app/portafolio/" target="_blank" rel="noopener"
                 >Rocky Barrios</a
             >.
         </p>
