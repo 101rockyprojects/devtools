@@ -6,5 +6,9 @@ node_modules
 .env
 .env.*
 !.env.example
+/.netlify
+/.netlify.toml
+!/.netlify.toml.example
+!/.netlify/.functions
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
