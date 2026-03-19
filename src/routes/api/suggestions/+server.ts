@@ -15,6 +15,12 @@ const SuggestionSchema = z.object({
         .max(2048)
         .optional()
         .transform((v) => (v?.trim() ? v.trim() : undefined)),
+    cover_image: z
+        .string()
+        .trim()
+        .max(2048)
+        .optional()
+        .transform((v) => (v?.trim() ? v.trim() : undefined)),
     tags: z
         .array(z.string().trim().min(1).max(24))
         .max(12)
@@ -95,12 +101,22 @@ export const POST: RequestHandler = async (event) => {
         details: normalizeText(parsed.data.details),
         category: parsed.data.category,
         url: parsed.data.url ? normalizeText(parsed.data.url) : undefined,
+        cover_image: parsed.data.cover_image
+            ? normalizeText(parsed.data.cover_image)
+            : undefined,
         tags: parsed.data.tags.map((t) => normalizeText(t.toLowerCase()))
     };
 
     if (suggestion.url && !isHttpUrl(suggestion.url)) {
         return json(
             { error: 'Invalid URL (only http/https allowed)' },
+            { status: 400 }
+        );
+    }
+
+    if (suggestion.cover_image && !isHttpUrl(suggestion.cover_image)) {
+        return json(
+            { error: 'Invalid cover image URL (only http/https allowed)' },
             { status: 400 }
         );
     }
@@ -113,6 +129,7 @@ export const POST: RequestHandler = async (event) => {
         `Name: ${suggestion.name}`,
         `Category: ${suggestion.category}`,
         `URL: ${suggestion.url ?? '(not provided)'}`,
+        `Cover image: ${suggestion.cover_image ?? '(not provided)'}`,
         `Tags: ${suggestion.tags.length ? suggestion.tags.join(', ') : '(none)'}`,
         ``,
         `Description:`,

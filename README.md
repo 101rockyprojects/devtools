@@ -33,6 +33,7 @@ Public users can submit suggestions via `POST /api/suggestions`. Suggestions:
 - Are rate-limited (basic per-IP bucket)
 - Are sent to your email via Web3Forms
 - Do **not** write to the `api.devtools` table automatically
+- Allows preview of the card
 
 This keeps the public endpoint safe while still allowing community input.
 
@@ -99,7 +100,7 @@ Create `.env.local` (do not commit secrets):
 SUPABASE_API_URL="https://<project>.supabase.co"
 SUPABASE_ANON_KEY="<anon-key>"
 
-# Required for server-side inserts (used by /api/admin/devtools and /newia)
+# Required for server-side inserts (used by /api/admin/devtools and /newdevtool)
 SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
 ADMIN_PASSWORD="<your-admin-password>"
 
@@ -133,7 +134,7 @@ GitHub Pages is static hosting, so this project is configured as a SPA:
 
 ### Notes
 
-- `/newia` inserts directly into Supabase and relies on Supabase Auth + RLS. You must create a Supabase Auth user with the admin email and sign in there.
+- `/newdevtool` inserts directly into Supabase and relies on Supabase Auth + RLS. You must create a Supabase Auth user with the admin email and sign in there.
 - Server endpoints under `src/routes/api/*` won’t run on GitHub Pages. For suggestions, the UI uses `PUBLIC_WEB3FORMS_API_KEY` to submit directly to Web3Forms.
 
 ## Local Development

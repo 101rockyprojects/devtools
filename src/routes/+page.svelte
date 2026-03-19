@@ -5,6 +5,18 @@
     import SearchBar from "$lib/components/SearchBar.svelte";
     import SuggestToolModal from "$lib/components/SuggestToolModal.svelte";
     import { filterTools } from "$lib/stores/tools";
+    import { base } from "$app/paths";
+    import { env } from "$env/dynamic/public";
+
+    const SITE_URL = env.PUBLIC_SITE_URL ?? "https://101rockyprojects.github.io/devtools";
+    const BASE_PATH = base || "/";
+
+    const canonicalUrl = new URL(BASE_PATH, SITE_URL).toString();
+    const ogImageUrl = new URL(
+        `${BASE_PATH.replace(/\/$/, "")}/og-image.webp`,
+        SITE_URL
+    ).toString();
+    const iconUrl = new URL(`${BASE_PATH.replace(/\/$/, "")}/icon.webp`, SITE_URL).toString();
 
     interface Props {
         data: PageData;
@@ -40,20 +52,25 @@
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#00a8b5" />
 
-    <link rel="canonical" href="https://devtools-directory.netlify.app/devtools" />
-    <link rel="icon" type="image/webp" href="https://devtools-directory.netlify.app/devtools/icon.webp" />
+    <title>DevTools Directory | Herramientas web e IA para desarrolladores</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/webp" href={iconUrl} />
+
+    <meta name="description" content="Directorio de herramientas web e IA para desarrolladores con reseñas honestas y actualizadas." />
+    <meta name="keywords" content="devtools, inteligencia artificial, herramientas web, productividad, desarrolladores" />
 
     <meta property="og:title" content="DevTools Directory" />
     <meta property="og:description" content="Herramientas web e IA para desarrolladores" />
-    <meta property="og:url" content="https://devtools-directory.netlify.app/devtools" />
-    <meta property="og:image" content="https://devtools-directory.netlify.app/devtools/og-image.webp" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DevTools Directory" />
     <meta property="og:locale" content="es_ES" />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="DevTools Directory" />
     <meta name="twitter:description" content="Herramientas web e IA para desarrolladores" />
-    <meta name="twitter:image" content="https://devtools-directory.netlify.app/devtools/og-image.webp" />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <script type="application/ld+json">
       {

@@ -1,5 +1,26 @@
 <script lang="ts">
+    import type { PageData } from "./$types";
+    import type { Tool } from "$lib/types/tool";
+    import ToolCard from "$lib/components/ToolCard.svelte";
+    import { base } from "$app/paths";
+
+    let { data }: { data: PageData } = $props();
+
+    const BASE_PATH = base || "/";
+    const CATEGORIES = ["IA", "DevTool", "Docs", "Library", "Tool"] as const;
+
+    let SITE_URL = $state("");
+    let canonicalUrl = $state("");
+    let ogImageUrl = $state("");
+
+    $effect(() => {
+        SITE_URL = data.siteUrl;
+        canonicalUrl = new URL(BASE_PATH, SITE_URL).toString();
+        ogImageUrl = new URL(`${BASE_PATH.replace(/\/$/, "")}/og-image.webp`, SITE_URL).toString();
+    });
+
     let adminPassword = $state("");
+    let category = $state<(typeof CATEGORIES)[number]>("DevTool");
 
     let name = $state("");
     let description = $state("");
@@ -11,6 +32,39 @@
     let isSaving = $state(false);
     let errorMsg = $state<string | null>(null);
     let successId = $state<string | null>(null);
+
+    let previewTags: string[] = [];
+    let previewTool = $state<Tool>({
+        id: "preview",
+        addedAt: new Date().toISOString(),
+        name: "Nombre de la herramienta",
+        description: "Una breve descripción de la herramienta.",
+        details: "Más detalles sobre el uso y valor de esta herramienta.",
+        category: "IA",
+        tags: [],
+        url: "",
+        coverImage: ""
+    });
+
+    $effect(() => {
+        previewTags = tagsRaw
+            .split(",")
+            .map((t) => t.trim().toLowerCase())
+            .filter(Boolean)
+            .slice(0, 12);
+
+        previewTool = {
+            id: "preview",
+            addedAt: new Date().toISOString(),
+            name: name.trim() || "Nombre de la herramienta",
+            description: description.trim() || "Una breve descripción de la herramienta.",
+            details: details.trim() || "Más detalles sobre el uso y valor de esta herramienta.",
+            category,
+            tags: previewTags,
+            url: url.trim() || "",
+            coverImage: coverImage.trim() || ""
+        };
+    });
 
     function validateHttpUrl(value: string): boolean {
         return /^https?:\/\/.+/i.test(value.trim());
@@ -49,6 +103,7 @@
                     name: name.trim(),
                     description: description.trim(),
                     details: details.trim(),
+                    category,
                     url: url.trim(),
                     coverImage: coverImage.trim() || undefined,
                     tags
@@ -75,7 +130,7 @@
             coverImage = "";
             tagsRaw = "";
         } catch (err) {
-            console.error("[DevTools] Insert IA failed:", err);
+            console.error("[DevTools] Insert DevTool failed:", err);
             errorMsg = "No se pudo insertar.";
         } finally {
             isSaving = false;
@@ -84,15 +139,27 @@
 </script>
 
 <svelte:head>
-    <title>New IA • DevTools Directory</title>
+    <title>New DevTool • DevTools Directory</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="description" content="Inserta nuevas herramientas directamente en la base de datos de DevTools Directory." />
+
+    <meta property="og:title" content="New DevTool • DevTools Directory" />
+    <meta property="og:description" content="Inserta nuevas herramientas directamente en la base de datos de DevTools Directory." />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="New DevTool • DevTools Directory" />
+    <meta name="twitter:description" content="Inserta nuevas herramientas directamente en la base de datos de DevTools Directory." />
+    <meta name="twitter:image" content={ogImageUrl} />
 </svelte:head>
 
 <main class="shell">
     <header class="header">
-        <h1 class="title">New IA</h1>
+        <h1 class="title">New DevTool</h1>
         <p class="subtitle">
-            Inserta directamente en <code>api.devtools</code> con categoría
-            <code>IA</code> (ruta protegida por password).
+            Insert new tools directly into the DevTools Directory database.
         </p>
     </header>
 
@@ -113,9 +180,20 @@
                 <input id="name" type="text" bind:value={name} />
             </div>
 
-            <div class="field">
-                <label for="url">URL *</label>
-                <input id="url" type="url" bind:value={url} placeholder="https://..." />
+            <div class="field-row">
+                <div class="field">
+                    <label for="category">Category *</label>
+                    <select id="category" bind:value={category}>
+                        {#each CATEGORIES as c}
+                            <option value={c}>{c}</option>
+                        {/each}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="url">URL *</label>
+                    <input id="url" type="url" bind:value={url} placeholder="https://..." />
+                </div>
             </div>
 
             <div class="field">
@@ -143,6 +221,16 @@
                 <input id="tags" type="text" bind:value={tagsRaw} placeholder="ai, llm, dev" />
             </div>
 
+            <section class="preview" aria-label="Vista previa de la tarjeta">
+                <div class="preview-header">
+                    <h2 class="preview-title">Preview</h2>
+                    <p class="preview-sub">Preview of the tool card.</p>
+                </div>
+                <div class="preview-card">
+                    <ToolCard tool={previewTool} />
+                </div>
+            </section>
+
             {#if errorMsg}
                 <div class="error" role="alert">{errorMsg}</div>
             {/if}
@@ -153,7 +241,7 @@
             {/if}
 
             <button class="btn btn-primary" type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Insert IA"}
+                {isSaving ? "Saving..." : "Insert DevTool"}
             </button>
         </form>
     </section>
@@ -202,6 +290,52 @@
         gap: 0.75rem;
     }
 
+    .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+    }
+
+    @media (max-width: 720px) {
+        .field-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .preview {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .preview-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .preview-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--color-text);
+    }
+
+    .preview-sub {
+        margin: 0;
+        color: var(--color-text-muted);
+        font-size: 0.85rem;
+    }
+
+    .preview-card {
+        width: 100%;
+        max-width: 460px;
+        margin: 0 auto;
+    }
+
     .field {
         display: flex;
         flex-direction: column;
@@ -215,7 +349,8 @@
     }
 
     input,
-    textarea {
+    textarea,
+    select {
         width: 100%;
         padding: 0.75rem 0.85rem;
         border-radius: 14px;
@@ -227,7 +362,8 @@
     }
 
     input:focus,
-    textarea:focus {
+    textarea:focus,
+    select:focus {
         border-color: var(--color-primary);
     }
 

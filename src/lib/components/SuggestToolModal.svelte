@@ -1,4 +1,7 @@
 <script lang="ts">
+    import type { Tool } from "$lib/types/tool";
+    import ToolCard from "$lib/components/ToolCard.svelte";
+
     const CATEGORIES = ["IA", "DevTool", "Docs", "Library", "Tool"] as const;
 
     interface SuggestionPayload {
@@ -7,6 +10,7 @@
         details: string;
         category: (typeof CATEGORIES)[number];
         url?: string;
+        cover_image?: string;
         tags: string[];
     }
 
@@ -22,10 +26,45 @@
     let details = $state("");
     let category = $state<(typeof CATEGORIES)[number]>("DevTool");
     let url = $state("");
+    let coverImage = $state("");
     let tagsRaw = $state("");
     let errors = $state<Record<string, string>>({});
     let isSubmitting = $state(false);
     let submitError = $state<string | null>(null);
+
+    let previewTags: string[] = [];
+
+    let previewTool = $state<Tool>({
+        id: "preview",
+        addedAt: new Date().toISOString(),
+        name: "Nombre de la herramienta",
+        description: "Una breve descripción de la herramienta.",
+        details: "Más detalles sobre el uso y valor de esta herramienta.",
+        category: "DevTool",
+        tags: [],
+        url: "",
+        coverImage: ""
+    });
+
+    $effect(() => {
+        previewTags = tagsRaw
+            .split(",")
+            .map((t) => t.trim().toLowerCase())
+            .filter(Boolean)
+            .slice(0, 12);
+
+        previewTool = {
+            id: "preview",
+            addedAt: new Date().toISOString(),
+            name: name.trim() || "Nombre de la herramienta",
+            description: description.trim() || "Una breve descripción de la herramienta.",
+            details: details.trim() || "Más detalles sobre el uso y valor de esta herramienta.",
+            category,
+            tags: previewTags,
+            url: url.trim() || "",
+            coverImage: coverImage.trim() || ""
+        };
+    });
 
     function validate(): boolean {
         const next: Record<string, string> = {};
@@ -36,6 +75,8 @@
         if (!details.trim()) next.details = "Los detalles son obligatorios";
         if (url.trim() && !/^https?:\/\/.+/i.test(url.trim()))
             next.url = "Introduce una URL válida (http/https)";
+        if (coverImage.trim() && !/^https?:\/\/.+/i.test(coverImage.trim()))
+            next.coverImage = "Introduce una URL válida (http/https)";
 
         errors = next;
         return Object.keys(next).length === 0;
@@ -61,6 +102,7 @@
         };
 
         if (url.trim()) payload.url = url.trim();
+        if (coverImage.trim()) payload.cover_image = coverImage.trim();
 
         isSubmitting = true;
         try {
@@ -175,6 +217,19 @@
                     {#if errors.url}<span class="error-msg">{errors.url}</span
                         >{/if}
                 </div>
+
+                <div class="field" class:has-error={errors.coverImage}>
+                    <label for="field-cover" >Imagen (URL) <span class="hint">(opcional)</span></label>
+                    <input
+                        id="field-cover"
+                        type="url"
+                        bind:value={coverImage}
+                        placeholder="https://..."
+                    />
+                    {#if errors.coverImage}
+                        <span class="error-msg">{errors.coverImage}</span>
+                    {/if}
+                </div>
             </div>
 
             <div class="field" class:has-error={errors.description}>
@@ -216,6 +271,16 @@
                     bind:value={tagsRaw}
                     placeholder="api, devtool, productivity"
                 />
+            </div>
+
+            <div class="preview-section" aria-label="Vista previa de la tarjeta">
+                <h3 class="preview-title">Vista previa</h3>
+                <p class="preview-sub">
+                    Así se verá la tarjeta al enviarla (solo es una vista previa, no se guarda hasta enviar).
+                </p>
+                <div class="preview-card">
+                    <ToolCard tool={previewTool} />
+                </div>
             </div>
 
             <div class="modal-actions">
@@ -321,6 +386,34 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.65rem;
+    }
+
+    .preview-section {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .preview-title {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--color-text);
+    }
+
+    .preview-sub {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--color-text-muted);
+    }
+
+    .preview-card {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
     }
 
     @media (max-width: 720px) {

@@ -7,6 +7,7 @@ const InsertIaSchema = z.object({
     name: z.string().trim().min(2).max(80),
     description: z.string().trim().min(10).max(180),
     details: z.string().trim().min(10).max(1200),
+    category: z.enum(['IA', 'DevTool', 'Docs', 'Library', 'Tool']),
     url: z.string().trim().min(8).max(2048),
     coverImage: z
         .string()
@@ -69,7 +70,7 @@ export const POST: RequestHandler = async (event) => {
         name: parsed.data.name,
         description: parsed.data.description,
         details: parsed.data.details,
-        category: 'IA',
+        category: parsed.data.category,
         url: parsed.data.url,
         cover_image: parsed.data.coverImage,
         tags: parsed.data.tags
