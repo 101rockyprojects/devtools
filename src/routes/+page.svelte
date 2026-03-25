@@ -8,7 +8,7 @@
     import { base } from "$app/paths";
     import { env } from "$env/dynamic/public";
 
-    const SITE_URL = env.PUBLIC_SITE_URL ?? "https://101rockyprojects.github.io/devtools";
+    const SITE_URL = env.PUBLIC_SITE_URL ?? "https://devtools-directory.netlify.app/";
     const BASE_PATH = base || "/";
 
     const canonicalUrl = new URL(BASE_PATH, SITE_URL).toString();
